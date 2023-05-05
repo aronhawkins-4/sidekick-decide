@@ -5,7 +5,7 @@ export const Header = () => {
   const { data: sessionData } = useSession();
 
   return (
-    <div className="navbar bg-slate-100 text-primary-content">
+    <div className="navbar absolute bg-slate-100 text-primary-content">
       <div className="flex-1 pl-5 text-3xl font-bold text-accent">
         SIDEKICK DECIDE
       </div>

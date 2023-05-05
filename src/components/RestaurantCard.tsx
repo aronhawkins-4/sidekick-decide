@@ -4,30 +4,20 @@ type foodType = RouterOutputs["foodType"]["getAll"][0];
 
 export const RestaurantCard = ({
   food,
-  onClick,
+  updateFoodType,
 }: {
   food: foodType | null;
-  onClick: () => void;
+  updateFoodType: () => void;
 }) => {
   return (
-    <div className="card card-compact w-96 rounded-3xl bg-slate-100 text-primary-content">
+    <div className="card w-96 rounded-3xl bg-slate-100 text-primary-content">
       <div className="card-body items-center gap-4">
-        <h2 className="card-title text-center">{food?.title}</h2>
+        <h2 className="card-title text-center text-4xl">{food?.title}</h2>
         <div className="card-actions justify-center">
-          <button
-            className="btn"
-            onClick={() => {
-              onClick;
-            }}
-          >
+          <button className="btn-outline btn" onClick={updateFoodType}>
             No
           </button>
-          <button
-            className="btn"
-            onClick={() => {
-              onClick;
-            }}
-          >
+          <button className="btn" onClick={updateFoodType}>
             Yes
           </button>
         </div>

@@ -25,14 +25,14 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      <div className="flex flex-col gap-4 p-32">
+      <div className="flex w-full flex-col items-center justify-center gap-4 p-32">
         <h1 className="text-8xl text-secondary">Rank your favorite foods.</h1>
         <p className="text-xl text-secondary">
           Pick up to 5 of your favorite food types. This will help us when
           recommending places for you to eat.
         </p>
         <FoodGrid />
-        <ContinueButton location={"/favorite-activities"} text={"Continue"} />
+        <ContinueButton location={"/vote"} text={"Vote"} />
       </div>
     </div>
   );
@@ -66,7 +66,7 @@ const FoodGrid: React.FC = () => {
   });
 
   return (
-    <div>
+    <div className="w-full">
       <input
         type="text"
         className="input-bordered input input-sm w-full"
