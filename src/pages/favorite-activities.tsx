@@ -5,10 +5,10 @@ import { useSession } from "next-auth/react";
 import { Header } from "@/components/Header";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FoodTypeButton } from "@/components/FoodTypeButton";
 import { ContinueButton } from "@/components/ContinueButton";
+import { ActivityTypeButton } from "@/components/ActivityTypeButton";
 
-const Home: NextPage = () => {
+const FavoriteActivities: NextPage = () => {
   // const [data, setData] = useState("");
   // useEffect(() => {
   //   axios
@@ -26,42 +26,42 @@ const Home: NextPage = () => {
   return (
     <div>
       <div className="flex flex-col gap-4 p-32">
-        <h1 className="text-8xl text-secondary">Rank your favorite foods.</h1>
+        <h1 className="text-8xl text-secondary">
+          Rank your favorite activities to do.
+        </h1>
         <p className="text-xl text-secondary">
-          Pick up to 5 of your favorite food types. This will help us when
-          recommending places for you to eat.
+          Pick up to 5 of your activities. This will help us when recommending
+          fun things for you to do.
         </p>
-        <FoodGrid />
-        <ContinueButton location={"/favorite-activities"} text={"Continue"} />
+        <ActivityGrid />
+        <ContinueButton location={"/"} text={"Continue"} />
       </div>
     </div>
   );
 };
 
-export default Home;
+export default FavoriteActivities;
 
 type FoodType = RouterOutputs["foodType"]["getAll"][0];
 
-const FoodGrid: React.FC = () => {
+const ActivityGrid: React.FC = () => {
   const { data: sessionData } = useSession();
-
-  const [foodTypeLength, setFoodTypeLength] = useState<number>(0);
-  const { data: foodTypes, refetch: refetchFoodTypes } =
-    api.foodType.getAll.useQuery(
+  const { data: activityTypes, refetch: refetchActivityTypes } =
+    api.activityType.getAll.useQuery(
       undefined, // no input
       {
         enabled: sessionData?.user !== undefined,
       }
     );
-  const createFoodType = api.foodType.create.useMutation({
+
+  const createActivityType = api.activityType.create.useMutation({
     onSuccess: () => {
-      void refetchFoodTypes();
+      void refetchActivityTypes();
     },
   });
-
-  const deleteFoodType = api.foodType.delete.useMutation({
+  const deleteActivityType = api.activityType.delete.useMutation({
     onSuccess: () => {
-      void refetchFoodTypes();
+      void refetchActivityTypes();
     },
   });
 
@@ -73,20 +73,24 @@ const FoodGrid: React.FC = () => {
         placeholder="New Food Type"
         onKeyDown={(e) => {
           if (e.key === "Enter") {
-            createFoodType.mutate({
+            createActivityType.mutate({
               title: e.currentTarget.value,
             });
             e.currentTarget.value = "";
           }
         }}
       />
-
       <ul className="m-auto mt-4 grid w-full grid-cols-3 content-center items-center gap-4 bg-base-100 p-2">
-        {foodTypes?.map((foodType) => (
-          <li key={foodType.id} className="flex items-center justify-center">
-            <FoodTypeButton
-              food={foodType}
-              onDelete={() => deleteFoodType.mutate({ title: foodType.title })}
+        {activityTypes?.map((activityType) => (
+          <li
+            key={activityType.id}
+            className="flex items-center justify-center"
+          >
+            <ActivityTypeButton
+              activity={activityType}
+              onDelete={() =>
+                deleteActivityType.mutate({ title: activityType.title })
+              }
             />
           </li>
         ))}

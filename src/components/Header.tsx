@@ -5,8 +5,10 @@ export const Header = () => {
   const { data: sessionData } = useSession();
 
   return (
-    <div className="navbar bg-slate-200 text-primary-content">
-      <div className="flex-1 pl-5 text-3xl font-bold text-red-500">KALUA</div>
+    <div className="navbar bg-slate-100 text-primary-content">
+      <div className="flex-1 pl-5 text-3xl font-bold text-accent">
+        SIDEKICK DECIDE
+      </div>
       <div className="flex-none gap-2">
         <div className="dropdown-end dropdown">
           {sessionData?.user ? (

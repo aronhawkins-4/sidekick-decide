@@ -6,9 +6,9 @@ import {
   protectedProcedure,
 } from "@/server/api/trpc";
 
-export const foodTypeRouter = createTRPCRouter({
+export const activityTypeRouter = createTRPCRouter({
   getAll: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.foodType.findMany();
+    return ctx.prisma.activityType.findMany();
   }),
   create: protectedProcedure
     .input(
@@ -17,7 +17,7 @@ export const foodTypeRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.foodType.create({
+      return ctx.prisma.activityType.create({
         data: {
           title: input.title,
         },
@@ -26,7 +26,7 @@ export const foodTypeRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ title: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return ctx.prisma.foodType.delete({
+      return ctx.prisma.activityType.delete({
         where: {
           title: input.title,
         },
