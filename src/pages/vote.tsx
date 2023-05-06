@@ -6,33 +6,45 @@ import { RestaurantCard } from "@/components/RestaurantCard";
 import { useState } from "react";
 import { RouterOutputs } from "@/utils/api";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { stripVTControlCharacters } from "util";
+import { create } from "domain";
 
 type FoodType = RouterOutputs["foodType"]["getAll"][0];
+type Vote = RouterOutputs["vote"]["getAll"][0];
+
 const Vote: NextPage = () => {
   const { data: sessionData } = useSession();
   const [currentFoodType, setCurrentFoodType] = useState<FoodType | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const [foodTypesSize, setFoodTypesSize] = useState<number>(0);
-  //   const [noFoods, setNoFoods] = useState<FoodType[] | null>
+  const [yesFoods, setYesFoods] = useState<FoodType[]>([]);
   const {
     data: foodTypes,
     refetch: refetchFoodTypes,
-    isLoading: loading,
+    isLoading: foodTypesLoading,
   } = api.foodType.getAll.useQuery(
     undefined, // no input
     {
-      enabled: sessionData?.user !== undefined,
       onSuccess: (data) => {
         void setCurrentFoodType(currentFoodType ?? data[0] ?? null);
         void setFoodTypesSize(data.length);
       },
     }
   );
-  function getCurrentIndex(foodType: FoodType) {
-    return foodType.title === currentFoodType?.title;
-  }
+  const {
+    data: votes,
+    refetch: refetchVotes,
+    isLoading: votesLoading,
+  } = api.vote.getAll.useQuery(
+    undefined // no input
+  );
+  const createVote = api.vote.create.useMutation({
+    onSuccess: () => {
+      void refetchVotes();
+    },
+  });
 
-  if (loading)
+  if (foodTypesLoading)
     return (
       <div className="flex h-screen w-screen items-center justify-center">
         <LoadingSpinner />
@@ -48,6 +60,11 @@ const Vote: NextPage = () => {
               ? setCurrentIndex(0)
               : setCurrentIndex(currentIndex + 1);
             setCurrentFoodType(foodTypes?.at(currentIndex) ?? null);
+          }}
+          onYesClick={() => {
+            createVote.mutate({
+              votedForTitle: currentFoodType?.title!,
+            });
           }}
         />
       </div>

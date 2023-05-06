@@ -66,15 +66,22 @@ model VerificationToken {
 }
 
 model FoodType {
-    id          String   @id @default(cuid())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    title       String @unique
+    VoteFor     Vote[] @relation("votesFor")
+}
+
+model ActivityType {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     title       String @unique
 }
 
-model ActivityType {
-    id          String   @id @default(cuid())
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    title       String @unique
+model Vote {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  votedFor      FoodType @relation(name: "votesFor", fields: [votedForTitle], references: [title])
+  votedForTitle    String
+  @@index([votedForTitle])
 }

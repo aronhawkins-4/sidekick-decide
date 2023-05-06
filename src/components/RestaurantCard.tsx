@@ -5,9 +5,11 @@ type foodType = RouterOutputs["foodType"]["getAll"][0];
 export const RestaurantCard = ({
   food,
   updateFoodType,
+  onYesClick,
 }: {
   food: foodType | null;
   updateFoodType: () => void;
+  onYesClick: () => void;
 }) => {
   return (
     <div className="card w-96 rounded-3xl bg-slate-100 text-primary-content">
@@ -17,7 +19,13 @@ export const RestaurantCard = ({
           <button className="btn-outline btn" onClick={updateFoodType}>
             No
           </button>
-          <button className="btn" onClick={updateFoodType}>
+          <button
+            className="btn"
+            onClick={() => {
+              updateFoodType();
+              onYesClick();
+            }}
+          >
             Yes
           </button>
         </div>

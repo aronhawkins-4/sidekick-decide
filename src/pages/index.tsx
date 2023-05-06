@@ -48,10 +48,7 @@ const FoodGrid: React.FC = () => {
   const [foodTypeLength, setFoodTypeLength] = useState<number>(0);
   const { data: foodTypes, refetch: refetchFoodTypes } =
     api.foodType.getAll.useQuery(
-      undefined, // no input
-      {
-        enabled: sessionData?.user !== undefined,
-      }
+      undefined // no input
     );
   const createFoodType = api.foodType.create.useMutation({
     onSuccess: () => {
@@ -83,7 +80,7 @@ const FoodGrid: React.FC = () => {
 
       <ul className="m-auto mt-4 grid w-full grid-cols-3 content-center items-center gap-4 bg-base-100 p-2">
         {foodTypes?.map((foodType) => (
-          <li key={foodType.id} className="flex items-center justify-center">
+          <li key={foodType.title} className="flex items-center justify-center">
             <FoodTypeButton
               food={foodType}
               onDelete={() => deleteFoodType.mutate({ title: foodType.title })}
