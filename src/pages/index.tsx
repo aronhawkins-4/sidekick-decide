@@ -2,21 +2,20 @@ import { type NextPage } from "next";
 import { api } from "@/utils/api";
 import { RouterOutputs } from "@/utils/api";
 import { useSession } from "next-auth/react";
-import { Header } from "@/components/Header";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FoodTypeButton } from "@/components/FoodTypeButton";
 import { ContinueButton } from "@/components/ContinueButton";
 
 const Home: NextPage = () => {
-  // const [data, setData] = useState("");
+  // const [mapData, setMapData] = useState<unknown>("");
   // useEffect(() => {
   //   axios
   //     .get(
   //       `https://maps.googleapis.com/maps/api/place/textsearch/json?query=waco+tx+restaurants&key=${process.env.GOOGLE_MAPS_API_KEY}`
   //     )
   //     .then((response) => {
-  //       setData(response.data);
+  //       setMapData(response.data.results.name);
   //     })
   //     .catch((error) => {
   //       console.log(error);
@@ -45,7 +44,7 @@ type FoodType = RouterOutputs["foodType"]["getAll"][0];
 const FoodGrid: React.FC = () => {
   const { data: sessionData } = useSession();
 
-  const [foodTypeLength, setFoodTypeLength] = useState<number>(0);
+  const [selectionNum, setSelectionNum] = useState<number>(1);
   const { data: foodTypes, refetch: refetchFoodTypes } =
     api.foodType.getAll.useQuery(
       undefined // no input
@@ -83,6 +82,7 @@ const FoodGrid: React.FC = () => {
           <li key={foodType.title} className="flex items-center justify-center">
             <FoodTypeButton
               food={foodType}
+              selectionNum={selectionNum}
               onDelete={() => deleteFoodType.mutate({ title: foodType.title })}
             />
           </li>
