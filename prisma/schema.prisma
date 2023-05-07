@@ -66,10 +66,11 @@ model VerificationToken {
 }
 
 model FoodType {
+    id          String @id @default(cuid())
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     title       String @unique
-    VoteFor     Vote[] @relation("votesFor")
+    voteFor     Vote[] @relation("votesFor")
 }
 
 model ActivityType {

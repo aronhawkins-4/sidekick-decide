@@ -6,8 +6,6 @@ import { RestaurantCard } from "@/components/RestaurantCard";
 import { useState } from "react";
 import { RouterOutputs } from "@/utils/api";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
-import { stripVTControlCharacters } from "util";
-import { create } from "domain";
 
 type FoodType = RouterOutputs["foodType"]["getAll"][0];
 type Vote = RouterOutputs["vote"]["getAll"][0];
@@ -17,7 +15,6 @@ const Vote: NextPage = () => {
   const [currentFoodType, setCurrentFoodType] = useState<FoodType | null>(null);
   const [currentIndex, setCurrentIndex] = useState<number>(1);
   const [foodTypesSize, setFoodTypesSize] = useState<number>(0);
-  const [yesFoods, setYesFoods] = useState<FoodType[]>([]);
   const {
     data: foodTypes,
     refetch: refetchFoodTypes,
@@ -31,6 +28,8 @@ const Vote: NextPage = () => {
       },
     }
   );
+  const foodTypesLength = foodTypes?.length;
+
   const {
     data: votes,
     refetch: refetchVotes,
@@ -40,9 +39,10 @@ const Vote: NextPage = () => {
   );
   const createVote = api.vote.create.useMutation({
     onSuccess: () => {
-      void refetchVotes();
+      void refetchFoodTypes();
     },
   });
+  const deleteVote = api.vote.delete.useMutation({});
 
   if (foodTypesLoading)
     return (
@@ -53,29 +53,49 @@ const Vote: NextPage = () => {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-4">
       <div className="flex items-center justify-center">
-        <RestaurantCard
-          food={currentFoodType}
-          updateFoodType={() => {
-            currentIndex === foodTypesSize - 1
-              ? setCurrentIndex(0)
-              : setCurrentIndex(currentIndex + 1);
-            setCurrentFoodType(foodTypes?.at(currentIndex) ?? null);
-          }}
-          onYesClick={() => {
-            createVote.mutate({
-              votedForTitle: currentFoodType?.title!,
-            });
-          }}
-        />
+        {foodTypesLength! + 1 > currentIndex && (
+          <RestaurantCard
+            food={currentFoodType}
+            updateFoodType={() => {
+              setCurrentIndex(currentIndex + 1);
+              setCurrentFoodType(foodTypes?.at(currentIndex) ?? null);
+            }}
+            onYesClick={() => {
+              createVote.mutate({
+                votedForTitle: currentFoodType?.title!,
+              });
+            }}
+          />
+        )}
+        {foodTypesLength! < currentIndex && <div>THATS ALL</div>}
       </div>
       <div className="grid w-96 grid-cols-2">
         <div className="h-full w-full">
-          <h2 className="text-center text-3xl">No</h2>
-        </div>
-        <div className="h-full w-full">
           <h2 className="text-center text-3xl">Yes</h2>
+          <ul className="flex flex-col gap-2">
+            {foodTypes?.map((foodType) => {
+              return (
+                <li key={foodType.id} className="flex gap-4">
+                  <span>{foodType.title}</span>
+                  <span>{foodType.voteFor.length}</span>
+                  {foodType.voteFor.length > 5 && <div>POPULAR</div>}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </div>
+      <button
+        className="btn-secondary btn w-48 rounded-full"
+        onClick={() => {
+          votes?.map((vote) => {
+            deleteVote.mutate({ id: vote.id });
+          });
+          refetchFoodTypes();
+        }}
+      >
+        Reset Votes
+      </button>
       <ContinueButton location={"/"} text={"Go Back"} />
     </div>
   );

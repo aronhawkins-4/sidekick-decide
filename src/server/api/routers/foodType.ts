@@ -3,7 +3,11 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 
 export const foodTypeRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.foodType.findMany();
+    return ctx.prisma.foodType.findMany({
+      include: {
+        voteFor: true,
+      },
+    });
   }),
   create: publicProcedure
     .input(
