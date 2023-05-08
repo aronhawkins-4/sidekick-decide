@@ -7,10 +7,12 @@ type foodType = RouterOutputs["activityType"]["getAll"][0];
 export const FoodTypeButton = ({
   food,
   selectionNum,
+  setSelectionNum,
   onDelete,
 }: {
   food: foodType;
   selectionNum: number;
+  setSelectionNum: (args: number) => void;
   onDelete: () => void;
 }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
@@ -26,13 +28,18 @@ export const FoodTypeButton = ({
       onClick={(evt) => {
         evt.preventDefault();
         setIsSelected(!isSelected);
+        if (!isSelected) {
+          setSelectionNum(selectionNum + 1);
+        } else {
+          setSelectionNum(selectionNum - 1);
+        }
       }}
     >
       {food.title}
       {isSelected && (
         <>
           <div className="btn-accent absolute right-4 top-[-8px] flex h-6 w-6 items-center justify-center rounded-full">
-            {selectionNum}
+            !
           </div>
           <button
             className="btn-warning btn-xs btn w-24 rounded-full px-5"

@@ -91,7 +91,8 @@ const Vote: NextPage = () => {
           votes?.map((vote) => {
             deleteVote.mutate({ id: vote.id });
           });
-          refetchFoodTypes();
+          void refetchFoodTypes();
+          void refetchVotes();
         }}
       >
         Reset Votes

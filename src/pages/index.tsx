@@ -7,14 +7,19 @@ import axios from "axios";
 import { FoodTypeButton } from "@/components/FoodTypeButton";
 import { ContinueButton } from "@/components/ContinueButton";
 
+//  type mapResults = {
+//   email: string;
+// };
+
 const Home: NextPage = () => {
-  // const [mapData, setMapData] = useState<unknown>("");
+  // const [mapData, setMapData] = useState<mapResults>("");
+
   // useEffect(() => {
   //   axios
   //     .get(
   //       `https://maps.googleapis.com/maps/api/place/textsearch/json?query=waco+tx+restaurants&key=${process.env.GOOGLE_MAPS_API_KEY}`
   //     )
-  //     .then((response) => {
+  //     .then((response: mapResults) => {
   //       setMapData(response.data.results.name);
   //     })
   //     .catch((error) => {
@@ -83,6 +88,7 @@ const FoodGrid: React.FC = () => {
             <FoodTypeButton
               food={foodType}
               selectionNum={selectionNum}
+              setSelectionNum={setSelectionNum}
               onDelete={() => deleteFoodType.mutate({ title: foodType.title })}
             />
           </li>
